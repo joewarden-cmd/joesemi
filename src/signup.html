@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" data-theme = "halloween">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+    <div class="flex items-center justify-center h-screen">
+        <div class="flex flex-col gap-4 rounded-box bg-base-200 p-6 max-w-md w-full">
+            <h1 class="text-3xl font-bold">Create an account</h1>
+
+            <span>
+                Already have an account?
+                <a href="signin.html" class="link link-secondary">Log in</a>
+            </span>
+
+            <div class="divider my-0">OR</div>
+
+            <form id="signupForm">
+                <label class="form-control">
+                    <div class="label">
+                        <span class="label-text">Email</span>
+                    </div>
+
+                    <input type="email" id="email" name="email" class="input input-bordered" />
+                </label>
+
+                <label class="form-control">
+                    <div class="label">
+                        <span class="label-text">Fullname</span>
+                    </div>
+
+                    <input type="text" id="fullname" name="fullname" class="input input-bordered" />
+                </label>
+
+                <label class="form-control">
+                    <div class="label">
+                        <span class="label-text">Username</span>
+                    </div>
+
+                    <input type="text" id="username" name="username" class="input input-bordered" />
+                </label>
+
+                <label class="form-control">
+                    <div class="label">
+                        <span class="label-text">Password</span>
+                    </div>
+
+                    <input type="password" id="password" name="password" class="input input-bordered" />
+                </label>
+
+                <div class="">
+                    <label class="cursor-pointer label self-start gap-2">
+                        <input type="checkbox" class="checkbox" required />
+                        <span class="label-text">
+                            I accept the
+                            <a class="link link-accent">Terms and Conditions</a>
+                        </span>
+                    </label>
+                </div>
+
+                <button class="btn btn-primary">Create</button>
+            </form>
+        </div>
+    </div>
+    <!-- <h2>Signup</h2>
+    <form id="signupForm">
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" required><br><br>
+        <label for="fullname">Full Name:</label>
+        <input type="text" id="fullname" name="fullname" required><br><br>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+        <button type="submit">Register</button>
+        <div>
+            <a href="signin.html">Login</a>
+        </div>
+    </form> -->
+
+    <dialog id="s" class="modal">
+        <div class="modal-box text-center w-80">
+            <p class="text-success py-8">You have successfully registered!</p>
+            <a href="signin.html" class="btn btn-success btn-wide">Login</a>
+        </div>
+    </dialog>
+
+    <script src="lib/services/signup.js"></script>
+</body>
+
+</html>

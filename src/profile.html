@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" data-theme = "halloween">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile</title>
+  <link rel="stylesheet" href="assets/css/index.css">
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="lib/session.js" async></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="lib/profile.js" defer></script>
+  <script src="lib/info.js"></script>
+</head>
+
+<body>
+  <div id="profile" class="flex flex-col h-screen w-full">
+    <button onclick="window.history.back()" class="flex items-center">
+      <i class="material-icons">keyboard_backspace</i>
+    </button>
+
+    <div class="flex justify-between items-center pt-6 px-6">
+      <div class="avatar flex items-center">
+        <div class="w-24 rounded-full">
+          <img :src="'..' + items.profile_pic" />
+        </div>
+        <span class="m-3">
+          <h1 class="font-bold text-xl">{{ items.fullname }}</h1>
+          <h1 class="text-gray-600">@{{ items.username }}</h1>
+        </span>
+      </div>
+      <button v-if="!cuser" @click="followToggle()" class="btn btn-info">
+        {{ following ? 'Unfollow' : 'Follow' }}
+      </button>
+      <button v-else class="btn" onclick="changeInfo()">Edit Profile</button>
+    </div>
+    <div class="pb-3">
+      <div class="p-3">
+        <i class="material-icons">calendar_month</i>
+        Joined {{ items.date_created }}</div>
+      <div>
+        <a href="" class="p-3"><b>{{ items.following_count }}</b> Following</a>
+        <a href="" class="p-3"><b>{{ items.follower_count }}</b> Followers</a>
+      </div>
+    </div>
+    <div class="divider m-0 p-0"></div>
+    <!-- <input type="text" v-model="items[0].user_id">
+        <input type="text" v-model="suid"> -->
+    <!-- 
+        <div>
+            <ul>
+                <li v-for="item in mepost" :key="item.id">
+                  <label>
+                    <a :href="'profile.html?uid='+item.user_id">{{ item.fullname }}</a>
+                    - {{ item.created_at}}
+                    <button onclick="x.showModal()">Edit</button>
+                    <button @click="deletePost(item.post_id)">Delete</button>
+                  </label>  
+                  <p>{{ item.content }}</p>
+                  
+                  <template v-if="item.filenames && item.filenames.length > 0">
+                    <template v-for="(filename, index) in item.filenames">
+                      <img v-if="filename" :src="'..' + filename" :key="index" alt="" width="600" height="400">
+                    </template>
+                  </template>
+                  
+                  <button>Like</button>
+                  <button>
+                    <a :href="'comment.html?post=' + item.post_id + '&u=' + item.user_id">Comment</a>
+                  </button>
+                  <button>Share</button>
+                  <p class="border-b border-gray-300"></p>
+                </li>
+              </ul>
+        </div> -->
+
+    <!-- Card -->
+    <div class="overflow-auto h-dvh scrollbar-hide">
+
+      <div v-for="item in mepost" :key="item.id">
+        <div class="flex flex-col p-6 max-w-xl-2">
+          <div class="flex justify-between items-center">
+
+            <!-- <div class="avatar">
+              <div class="w-8 rounded-full">
+                <img src="https://avatars.githubusercontent.com/u/133362311?v=4" />
+              </div>
+              <h2 class="card-details px-5"><a :href="'profile.html?uid='+item.user_id">{{ item.fullname }}</a> -
+                <span class="text-gray-600">{{ item.created_at}}</span>
+              </h2>
+            </div> -->
+
+            <a :href="'profile.html?uid=' + item.user_id">
+              <div class="avatar container">
+                <div class="w-12 h-12 rounded-full">
+                  <img :src="'..' + item.profile_pic" />
+                </div>
+                  <label class="text-lg pl-2">{{ item.fullname }}
+                    <p class="text-gray-600 break-normal">@{{ item.username }}</p>
+                  </label>
+              </div>
+            </a>
+
+            <details class="dropdown dropdown-end dropdownX">
+              <summary class="m-1 btn btn-ghost"><i class="material-icons">more_horiz</i></summary>
+              <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-21">
+                <li class="text-info"><a @click="editContent(item.post_id)">Edit</a></li>
+                <li class="text-error"><a @click="deletePost(item.post_id)">Delete</a></li>
+              </ul>
+            </details>
+
+            <!-- <details class="dropdown dropdown-end">
+              <summary class="btn btn-sm btn-primary">More</summary>
+              <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-21">
+                <li class="text-primary"><a @click="editContent(item.post_id)">Edit</a></li>
+                <li class="text-danger"><a @click="deletePost(item.post_id)">Delete</a></li>
+              </ul>
+            </details> -->
+
+          </div>
+
+          <!-- <div class="flex flex-col gap-2">
+            <span class="text-center" v-if="!item.isEditing">{{ item.content }}</span>
+            <div v-else>
+              <input v-model="item.editedContent">
+              <button @click="saveEditedContent(item)">Save</button>
+              <button @click="cancelEditContent(item)">Cancel</button>
+            </div>
+          </div> -->
+
+          <div class="flex flex-col gap-2 py-4">
+            <p v-if="!item.isEditing">{{ item.content }}</p>
+            <div v-else>
+              <div class="w-full focus:outline-none" contenteditable="true"
+                @input="item.editedContent = $event.target.innerText">{{ item.editedContent }}</div>
+              <div class="float-end">
+                <button @click="saveEditedContent(item)" class="p-1 text-info hover:underline">Save</button>
+                <button @click="cancelEditContent(item)" class="p-1 text-info hover:underline">Cancel</button>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="item.filenames && item.filenames.length > 0">
+            <div class="carousel w-full rounded-box">
+              <template v-for="(filename, index) in item.filenames" :key="index">
+                <div :id="'slide'+ item.post_id + (index + 1)" class="carousel-item relative w-full">
+                  <img v-if="filename" :src="'..' + filename" class="w-full">
+                  <div v-if="item.filenames.length > 1"
+                    class="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+                    <a :href="'#slide'+ item.post_id + ((index - 1 + item.filenames.length) % item.filenames.length + 1)"
+                      class="btn btn-circle"><i class="material-icons">chevron_left</i></a>
+                    <a :href="'#slide'+ item.post_id + ((index + 1) % item.filenames.length + 1)"
+                      class="btn btn-circle"><i class="material-icons">chevron_right</i></a>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+
+          <span class="text-gray-600">{{ item.created_at}}</span>
+
+          <div class="flex justify-between items-center p-3">
+            <div class="flex items-center">
+              <a @click="likePost(item.post_id, item.user_id)" class="flex items-center hover:text-error">
+                <i class="material-icons mr-2">favorite</i> {{ item.likes_count }}
+              </a>
+              <a :href="'comment.html?post=' + item.post_id + '&u=' + item.user_id"
+                class="flex items-center hover:text-primary ml-4">
+                <i class="material-icons mr-2">forum</i> {{ item.comment_count }}
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="divider m-0 p-0"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    document.addEventListener('click', function (event) {
+      var dropdowns = document.querySelectorAll('.dropdownX');
+      var targetElement = event.target;
+
+      dropdowns.forEach(function (dropdown) {
+        if (!dropdown.contains(targetElement) && !targetElement.classList.contains('btn')) {
+          dropdown.removeAttribute('open');
+        }
+
+        if (targetElement.tagName === 'A' && dropdown.contains(targetElement)) {
+          dropdown.removeAttribute('open');
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

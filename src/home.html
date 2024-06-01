@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" data-theme = "halloween">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Homepage</title>
+  <link rel="stylesheet" href="assets/css/index.css">
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="lib/session.js"></script>
+  <script src="lib/home.js" type="module"></script>
+</head>
+
+<body class="flex flex-col h-screen w-screen">
+  <div class="navbar bg-base-100">
+    <a class="text-2xl">Homepage</a>
+  </div>
+  <div class="divider m-0 p-0"></div>
+
+  <div class="overflow-auto h-dvh scrollbar-hide">
+
+    <div id="homepage">
+      <!-- Card -->
+      <div v-for="item in contents" :key="item.id">
+        <div class="px-6 m-6">
+          <div class="flex justify-between items-center">
+
+            <a :href="'profile.html?uid=' + item.user_id">
+              <div class="avatar container">
+                <div class="w-12 h-12 rounded-full">
+                  <img :src="'..' + item.profile_pic" />
+                </div>
+                  <label class="text-lg pl-2">{{ item.fullname }}
+                    <p class="text-gray-600 break-normal">@{{ item.username }}</p>
+                  </label>
+              </div>
+            </a>
+
+
+            <template v-if="item.user_id == curuser">
+              <details class="dropdown dropdown-end dropdownX">
+                <summary class="m-1 btn btn-ghost"><i class="material-icons">more_horiz</i></summary>
+                <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-21">
+                  <li class="text-info"><a @click="editContent(item.post_id)">Edit</a></li>
+                  <li class="text-error"><a @click="deletePost(item.post_id)">Delete</a></li>
+                </ul>
+              </details>
+            </template>
+
+          </div>
+
+          <div class="flex flex-col gap-2 py-4">
+            <p v-if="!item.isEditing">{{ item.content }}</p>
+            <div v-else>
+              <!-- <textarea v-model="item.editedContent" class="w-full textarea"></textarea> -->
+              <div class="w-full focus:outline-none" contenteditable="true"
+                @input="item.editedContent = $event.target.innerText">{{ item.editedContent }}</div>
+              <div class="float-end">
+                <button @click="saveEditedContent(item)" class="p-1 text-info hover:underline">Save</button>
+                <button @click="cancelEditContent(item)" class="p-1 text-info hover:underline">Cancel</button>
+              </div>
+            </div>
+          </div>
+
+
+          <div v-if="item.filenames && item.filenames.length > 0">
+            <div class="carousel w-full rounded-box">
+              <template v-for="(filename, index) in item.filenames" :key="index">
+                <div :id="'slide'+ item.post_id + (index + 1)" class="carousel-item relative group w-full">
+                  <img v-if="filename" :src="'..' + filename" class="w-full">
+                  <div v-if="item.filenames.length > 1"
+                    class="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <a :href="'#slide'+ item.post_id + ((index - 1 + item.filenames.length) % item.filenames.length + 1)"
+                      class="btn btn-circle"><i class="material-icons">chevron_left</i></a>
+                    <a :href="'#slide'+ item.post_id + ((index + 1) % item.filenames.length + 1)"
+                      class="btn btn-circle"><i class="material-icons">chevron_right</i></a>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+
+          <span class="text-gray-600">{{ item.created_at}}</span>
+
+          <div class="flex justify-between items-center p-3">
+            <div class="flex items-center">
+              <div v-if="!item.likes_user_ids.includes(curuser)">
+                <a @click="likePost(item.post_id, curuser)" class="flex items-center cursor-pointer hover:text-error">
+                  <i class="material-icons mr-2">favorite</i> {{ item.likes_count }}
+                </a>
+              </div>
+              <div v-if="item.likes_user_ids.includes(curuser)">
+                <a @click="unlikePost(item.post_id, curuser)" class="flex items-center cursor-pointer text-error hover:text-gray-600">
+                  <i class="material-icons mr-2">favorite</i> {{ item.likes_count }}
+                </a>
+              </div>
+              <a :href="'comment.html?post=' + item.post_id + '&u=' + item.user_id"
+                class="flex items-center hover:text-primary ml-4">
+                <i class="material-icons mr-2">forum</i> {{ item.comment_count }}
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="divider m-0 p-0"></div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('click', function (event) {
+        var dropdowns = document.querySelectorAll('.dropdownX');
+        var targetElement = event.target;
+
+        dropdowns.forEach(function (dropdown) {
+          if (!dropdown.contains(targetElement) && !targetElement.classList.contains('btn')) {
+            dropdown.removeAttribute('open');
+          }
+
+          if (targetElement.tagName === 'A' && dropdown.contains(targetElement)) {
+            dropdown.removeAttribute('open');
+          }
+        });
+      });
+    </script>
+
+  </div>
+</body>
+
+</html>

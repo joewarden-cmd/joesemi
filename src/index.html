@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" data-theme = "halloween">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Homepage</title>
+  <link rel="stylesheet" href="assets/css/index.css">
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="lib/session.js" async></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="lib/main.js" defer></script>
+  <script src="lib/info.js"></script>
+</head>
+
+<body>
+  <div class="flex h-screen w-full" id="main">
+
+    <div class="flex flex-col w-full">
+      <div class="navbar bg-base-100">
+
+        <ul class=" text-2xl place-content-center pt-1 ">
+          <li class="text-success">
+          
+            <a href="home.html" target="main-content"><i class="material-icons pl-3">home</i> Home</a>
+          </li>
+          <li class="text-warning">
+            <a onclick="x.showModal()"><i class="material-icons pl-3">create</i> Create</a>
+          </li>
+          <li class="text-secondary">
+            <a href="search.html" target="main-content"><i class="material-icons pl-3">search</i> Search</a>
+          </li>
+          <li class="text-info">
+            <a href="notifications.html" target="main-content">
+              <div class="indicator">
+                <div v-if="notiff > 0" class="indicator-item badge badge-secondary">{{ notiff }}</div>
+                <i class="material-icons pl-3">notifications</i>
+              </div>
+              Notifications</a>
+          </li>
+          <li>
+            <a :href="'profile.html?uid='+uid" target="main-content"><i class="material-icons pl-3">account_circle</i>
+              Profile</a>
+          </li>
+          <li class="text-error">
+            <a type="submit" onclick="signoutUser()"><i class="material-icons pl-3">logout</i> Logout</a>
+          </li>
+        </ul>
+      </div>
+
+      <iframe src="home.html" name="main-content" id="main_content" frameborder="0" class="w-full h-full"></iframe>
+    </div>
+
+    </div>
+
+  </div>
+
+  <dialog id="x" onclose="clearMind()" class="modal modal-top px-96">
+    <div class="modal-box">
+      <form method="dialog">
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+      </form>
+      <div class="pt-6">
+        <form id="postForm">
+          <input type="hidden" name="imguid" id="imguid">
+          <textarea name="content" class="textarea textarea-bordered w-full P-6 "></textarea>
+          <div>
+            <input type="file" id="fileInput" name="img[]" accept="image/*" multiple
+              class="file-input file-input-bordered w-full">
+          </div>
+          <button class="btn btn-primary float-end ">POST</button>
+        </form>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="my" class="modal">
+    <div class="modal-box">
+      <form method="dialog">
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+      </form>
+      <form id="updateInfoForm">
+        <div class="avatar relative group">
+          <div class="w-24 rounded-full">
+            <img id="selectedImage" alt="Avatar Image" class="rounded-full">
+          </div>
+          <div class="absolute inset-0 rounded-full opacity-0 bg-black bg-opacity-50 transition-opacity duration-300 group-hover:opacity-100">
+            <i class="material-icons flex items-center justify-center h-24">edit</i>
+            <input type="file" accept="image/*" id="imageInput" name="profile" onchange="displayImage()"
+            class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"/>
+          </div>
+        </div>
+
+        <input type="hidden" id="logid" name="userid">
+        <label class="form-control">
+            <div class="label">
+                <span class="label-text">Fullname</span>
+            </div>
+
+            <input id="logname" name="fullname" class="input input-bordered" />
+        </label>
+        <label class="form-control pb-6">
+          <div class="label">
+              <span class="label-text">Username</span>
+          </div>
+
+          <input id="loguname" name="username" class="input input-bordered" />
+      </label>
+
+        <button class="btn btn-primary float-end">Save</button>
+    </form>
+    </div>
+  </dialog>
+
+
+  <!-- <script src="lib/services/login.js"></script> -->
+  <script src="lib/services/post.js"></script>
+  <script src="lib/services/upload.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" data-theme = "halloween">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications</title>
+    <link rel="stylesheet" href="assets/css/index.css">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="lib/session.js" async></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="lib/notif.js" defer></script>
+</head>
+<body class="flex flex-col h-screen w-screen">
+    <div class="navbar">
+        <a class="text-2xl">Notifications</a>
+    </div>
+    <div class="divider m-0 p-0"></div>
+    
+    <div id="notifa" class="overflow-auto h-dvh">
+        <div v-for="item in not" :key="item.id" class="px-3 m-3">
+            <a :href="'profile.html?uid=' + item.user_id">
+                <div class="avatar flex items-center pt-3 relative">
+                  <div class="w-10 h-10 rounded-full">
+                    <img :src="'..' + item.profile_pic" />
+                  </div>
+                  <label class="text-lg pl-2"> <b>{{ item.fullname }}</b> like your post.
+                    <p class="text-gray-600">
+                      {{ item.date_like }}
+                    </p>
+                  </label>
+                  <!-- <div class="absolute left-0 bottom-0 mb-1 w-7 h-7 bg-blue-600 rounded-full flex items-center justify-center">
+                    <i class="material-icons text-base-content">chat</i>
+                  </div> -->
+                </div>
+              </a>
+        </div>
+    </div>
+
+</body>
+</html>

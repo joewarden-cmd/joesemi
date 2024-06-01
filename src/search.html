@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" data-theme = "halloween">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="lib/search.js" defer></script>
+</head>
+
+<body>
+    <div id="search">
+
+        <div class="navbar flex">
+            <label class="input input-bordered flex items-center gap-2 w-full">
+                <input type="text" v-model="searchText" @input="updateURL()" class="flex-grow w-full" placeholder="Search" />
+                <button @click="performSearch" class="flex-shrink-0">
+                    <i class="material-icons w-4 h-4 opacity-70">search</i>
+                </button>
+            </label>
+        </div>
+
+        <!-- <input type="text" v-model="searchText" placeholder="Enter search term"> -->
+        <!-- <button @click="performSearch">Search</button> -->
+        <!-- <div v-if=" searchText.length > 0">
+            <li v-for="item in resultsFiltered" :key="item.id">
+                <a :href="'profile.html?uid='+item.user_id">{{ item.fullname }}</a>
+                <div>@{{ item.username }}</div>
+            </li>
+        </div> -->
+
+        <div v-if=" searchText.length > 0">
+            Search for "{{ searchText }}"
+            <div class="divider m-0 p-0"></div>
+            <div v-for="item in resultsFiltered" :key="item.id" class="px-3 m-3">
+                <!-- <a :href="'profile.html?uid='+item.user_id">{{ item.fullname }}
+                    <div class="avatar">
+                        <div class="w-10 h-10 rounded-full">
+                            <img src="https://avatars.githubusercontent.com/u/133362311?v=4" />
+                        </div>
+                        <label class="text-lg">
+            
+                            <p class="text-gray-600">
+                                @{{ item.username }}
+                            </p>
+            
+                        </label>
+                    </div>
+                </a> -->
+
+                <a :href="'profile.html?uid=' + item.user_id">
+                    <div class="avatar flex items-center pt-3">
+                      <div class="w-10 h-10 rounded-full">
+                        <img :src="'..' + item.profile_pic" />
+                      </div>
+                      <label class="text-lg pl-2"> {{ item.fullname }}
+                        <p class="text-gray-600">
+                          @{{ item.username }}
+                        </p>
+                      </label>
+                    </div>
+                  </a>
+            </div>
+        </div>
+
+        <div v-else>
+            No results found.
+        </div>
+    </div>
+</body>
+
+</html>

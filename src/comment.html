@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" data-theme = "halloween">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comment</title>
+    <link rel="stylesheet" href="assets/css/index.css">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="lib/session.js" async></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="lib/comment.js" defer></script>
+</head>
+
+<body class="flex flex-col h-screen w-screen">
+
+    <div class="navbar">
+        <button onclick="window.history.back()">
+            <i class="material-icons">keyboard_backspace</i>
+        </button>
+    </div>
+    <div class="divider m-0 p-0"></div>
+
+    <!-- <a href="index.html">X</a> -->
+
+    <!-- <div class="flex h-screen overflow-hidden"> -->
+
+    <!-- <div class="flex-auto"> -->
+    <div id="comment" class="overflow-auto h-dvh scrollbar-hide">
+        <ul>
+            <li v-for="item in comments" :key="item.id">
+                <a :href="'profile.html?uid=' + item.user_id">
+                    <div class="avatar container p-3">
+                        <div class="w-10 rounded-full">
+                            <img :src="'..' + item.profile_pic" />
+                        </div>
+                        <label class="pl-3">{{ item.fullname }}
+                            <span class="text-gray-600">
+                                @{{ item.username }} - {{ item.created_at }}
+                            </span>
+                        </label>
+                    </div>
+                </a>
+
+                <!-- <template v-if="item.user_id == owner">
+                            <button @click="editComment(item.comment_id)">Edit</button>
+                            <button @click="deleteComment(item.comment_id)">Delete</button>
+                        </template> -->
+
+                <template v-if="item.user_id == owner">
+                    <details class="dropdown dropdown-end dropdownY">
+                        <summary class="m-1 btn btn-ghost"><i class="material-icons">more_horiz</i></summary>
+                        <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-21">
+                            <li class="text-info"><a @click="editComment(item.comment_id)">Edit</a></li>
+                            <li class="text-error"><a @click="deleteComment(item.comment_id)">Delete</a></li>
+                        </ul>
+                    </details>
+                </template>
+
+                <div class="flex flex-col p-3">
+                    <p v-if="!item.isEditing">{{ item.comment_text }}</p>
+                    <div v-else>
+                        <!-- <input v-model="item.editedComment"> -->
+                        <div class="w-full focus:outline-none" contenteditable="true"
+                            @input="item.editedComment = $event.target.innerText">{{ item.editedComment }}</div>
+                        <div class="float-end">
+                            <button @click="saveEditedComment(item)" class="p-1 text-info hover:underline">Save</button>
+                            <button @click="cancelEdit(item)" class="p-1 text-info hover:underline">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="divider m-0 p-0"></div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="footer p-4 flex items-center">
+        <form id="commentme" class="w-full flex items-center gap-2">
+            <input type="hidden" id="user_iddd" name="userid">
+            <input type="hidden" id="post_iddd" name="postid">
+            <!-- <textarea name="commenttext" cols="30" rows="2" class="textarea"></textarea> -->
+            <!-- <div name="commenttext" contenteditable="true"></div> -->
+            <label class="input input-bordered flex items-center gap-2 w-full">
+                <input type="text" class="flex-grow w-full" name="commenttext" placeholder="Comment" />
+                <button type="submit" class="flex-shrink-0">
+                    <i class="material-icons w-4 h-4 opacity-70">send</i>
+                </button>
+            </label>
+            <!-- <button class="btn">Comment</button> -->
+        </form>
+    </div>
+
+    <!-- </div> -->
+    <!-- </div> -->
+
+    <script>
+
+        window.onload = function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const postId = urlParams.get('post');
+            const uId = localStorage.getItem('user_id');
+
+            document.getElementById("post_iddd").value = postId;
+            document.getElementById("user_iddd").value = uId;
+
+            //   if (postId) {
+            //     const apiUrl = `https://api.example.com/data?post_id=${postId}`;
+
+            //     fetch(apiUrl)
+            //       .then(response => response.json())
+            //       .then(data => {
+            //         console.log(data);
+            //       })
+            //       .catch(error => {
+            //         console.error('Error fetching data:', error);
+            //       });
+            //   } else {
+            //     console.error('No post_id provided in the URL');
+            //     location.href = "home.html";
+            //   }
+        };
+
+
+        // const userId = localStorage.getItem('user_id');
+        // document.getElementById("userid").value = userId;
+
+        document.getElementById('commentme').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            fetch('../api/comment/create_comment.php', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    location.reload();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again later.');
+                });
+        });
+
+
+
+        document.addEventListener('click', function (event) {
+            var dropdowns = document.querySelectorAll('.dropdownY');
+            var targetElement = event.target;
+
+            dropdowns.forEach(function (dropdown) {
+                if (!dropdown.contains(targetElement) && !targetElement.classList.contains('btn')) {
+                    dropdown.removeAttribute('open');
+                }
+
+                if (targetElement.tagName === 'A' && dropdown.contains(targetElement)) {
+                    dropdown.removeAttribute('open');
+                }
+            });
+        });
+
+
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" data-theme = "halloween">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+    <div class="flex justify-center items-center h-screen">
+        <div class="flex flex-col gap-4 rounded-box bg-base-200 p-6 max-w-md w-full">
+            <h1 class="text-3xl font-bold">Log in</h1>
+
+            <span>
+                Don't have an account?
+                <a href="signup.html" class="link link-secondary">Register</a>
+            </span>
+
+            <div class="divider">OR</div>
+
+            <form id="loginForm">
+                <label class="form-control">
+                    <div class="label">
+                        <span class="label-text">Username</span>
+                    </div>
+
+                    <input id="username" name="username" class="input input-bordered" />
+                </label>
+
+                <label class="form-control">
+                    <div class="label">
+                        <span class="label-text">Password</span>
+                        <!-- <a class="label-text link link-accent">Forgot password?</a> -->
+                    </div>
+
+                    <input id="password" name="password" type="password" class="input input-bordered" />
+                </label>
+
+                <div class="form-control">
+                    <label class="cursor-pointer label self-start gap-2">
+                        <input type="checkbox" class="checkbox" />
+                        <span class="label-text">Remember me</span>
+                    </label>
+                </div>
+
+                <button class="btn btn-primary">Log in</button>
+            </form>
+        </div>
+    </div>
+    <!-- <h2>Sign In</h2>
+    <form id="loginForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+        <button type="submit">Signin</button>
+        <div>
+            <a href="signup.html">Signup</a>
+        </div>
+    </form> -->
+
+    <script src="lib/services/signin.js"></script>
+</body>
+
+</html>
